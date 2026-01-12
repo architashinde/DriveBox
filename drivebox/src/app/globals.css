@@ -1,17 +1,14 @@
 @import "tailwindcss";
 
-@layer utilities{
-  .center{
+@layer utilities {
+  .center {
     @apply flex h-screen items-center justify-center bg-amber-100;
   }
 
-  .h1{
+  .h1 {
     @apply text-[34px] leading-[42px] font-bold;
   }
 }
-
-
-
 
 :root {
   --background: #ffffff;
