@@ -19,6 +19,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <h1 className="text-4xl font-bold">
             Manage Files The Best Way
           </h1>
+          <Image src="/logoo.png" alt="DriveBox logo" width={500} height={500} />
+  
           <p className="text-lg">
             A Place Where You Can Store All Your Documents
           </p>
