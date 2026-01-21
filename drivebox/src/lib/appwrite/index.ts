@@ -1,3 +1,4 @@
+"use server";
 //node-appwrite 
 import {appwriteConfig} from "@/lib/appwrite/config";
 import { cookies } from "next/dist/server/request/cookies";

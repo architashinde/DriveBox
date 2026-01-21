@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import Link from 'next/link';
+import { createAccount } from '@/lib/actions/user.actions';
 
 
 const formSchema = z.object({
@@ -31,7 +32,7 @@ type AuthFormProps = {
 
 const AuthForm = ({ formType }: AuthFormProps) => {
     
-   const [isLoading] = useState(false);
+   const [isLoading, setIsLoading] = useState(false);
    const [errorMessage] = useState<string | null>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -40,7 +41,13 @@ const AuthForm = ({ formType }: AuthFormProps) => {
     },
   })
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values)
+    setIsLoading(true);
+    const user = createAccount({fullName, email}:{
+      fullName: values.fullName || " ",
+      email: values.email,
+
+    })
+
   }
 
   return(
