@@ -33,7 +33,9 @@ type AuthFormProps = {
 const AuthForm = ({ formType }: AuthFormProps) => {
     
    const [isLoading, setIsLoading] = useState(false);
-   const [errorMessage] = useState<string | null>(null);
+   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+   const [accountId, setAccountId]= useState(null);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,12 +44,22 @@ const AuthForm = ({ formType }: AuthFormProps) => {
   })
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
-    const user = createAccount({fullName, email}:{
+    setErrorMessage(" ");
+
+    try{
+      const user = await createAccount({
       fullName: values.fullName || " ",
       email: values.email,
+    });
+      setAccountId(user.accountId);
+    }catch{
+      setErrorMessage('Failed to create an account. Please try again.');
 
-    })
-
+    }finally{
+      setIsLoading(false);
+    }
+    
+   
   }
 
   return(
