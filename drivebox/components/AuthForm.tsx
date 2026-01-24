@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input"
 import Link from 'next/link';
 import { createAccount } from '@/lib/actions/user.actions';
+import OtpModal from './OTPModal';
 
 
 const formSchema = z.object({
@@ -118,6 +119,10 @@ const AuthForm = ({ formType }: AuthFormProps) => {
     </Form>
 
      {/* Otp verification */}
+
+     {true && <OtpModal email = {form.getValues("email")}
+     accountId = {accountId}
+     />}
 
     </>
   )
