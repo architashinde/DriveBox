@@ -33,8 +33,15 @@ const sendEmailOTP = async ({email}: {email: string}) => {
     }
 }
 
+type createAccountParams ={
+    fullName: string;
+    email: string;
+};
 
-export const createAccount = async ({ fullName, email }: { fullName: string; email: string; }, p0: { fullName: string; email: string; }) => {
+export const createAccount = async ({
+    fullName,
+    email,
+}:createAccountParams) => {
 
     const existingUser = await getUserByEmail(email);
     

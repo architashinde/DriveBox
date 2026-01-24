@@ -14,10 +14,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           height={32}
           className="mb-6"
         />
-
         <div className="space-y-5 text-white">
-          <h1 className="text-4xl font-bold">
-            Manage Files The Best Way
+          <h1 className="text-4xl font-bold">Manage Files The Best Way
           </h1>
           <Image src="/storage.jpg" alt="DriveBox" width={700} height={700} />
   
