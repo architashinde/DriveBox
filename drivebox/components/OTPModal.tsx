@@ -50,7 +50,7 @@ const OtpModal = () => {
     <AlertDialogHeader className='relative flex justify-center-safe-center'>
       <AlertDialogTitle className='h2 text-center'>Enter Your OTP
         <Image 
-        src="/public/close.png" 
+        src="/close.png" 
         alt="close" 
         width={20} 
         height={20} 
