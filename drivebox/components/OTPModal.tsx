@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/input-otp"  
 import { email } from 'zod';
 import { link } from 'fs';
-import { verifySecret } from '@/lib/actions/user.actions';
+import { verifySecret, sendEmailOTP} from '@/lib/actions/user.actions';
 import { useRouter } from 'next/navigation';
 
 const OtpModal = ({accountId, email}:{accountId:string, email:string}) => {
@@ -46,6 +46,8 @@ const OtpModal = ({accountId, email}:{accountId:string, email:string}) => {
     };
 
     const handleResendOtp = async () => {
+
+      await sendEmailOTP({email});
 
     };
     return (
@@ -94,9 +96,6 @@ const OtpModal = ({accountId, email}:{accountId:string, email:string}) => {
     </AlertDialogFooter>
   </AlertDialogContent>
 </AlertDialog>
-
-
-
     )
 };
 
