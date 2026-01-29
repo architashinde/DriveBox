@@ -15,7 +15,7 @@
 
 @layer utilities {
   .center {
-    @apply flex h-screen items-center justify-center bg-amber-100;
+    @apply flex h-screen items-center justify-center bg-red-500;
   }
 
   .h1 {
@@ -92,6 +92,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-brand:#FA7275;
+  --color-brand-100:#EA6365;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);

@@ -1,13 +1,12 @@
-"use client";
+
 
 import { ID, Query } from "node-appwrite";
 import { createAdminClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { parseStringify } from "../utils";
 import { string } from "zod";
-import { cookies } from "next/headers";
 
-const getUserByEmail = async (email: string) => {
+export const getUserByEmail = async (email: string) => {
     const {databases} = await createAdminClient();
 
     const result = await databases.listDocuments(
@@ -83,4 +82,8 @@ export const verifySecret = async({ accountId, password }: { accountId: string; 
 
 
 
+
+function cookies() {
+    throw new Error("Function not implemented.");
+}
 
