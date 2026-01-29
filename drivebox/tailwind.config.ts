@@ -12,9 +12,9 @@ const config: Config = {
   theme: {
   	extend: {
   		colors: {
-  			brand: {
-  				'100': '#EA6365',
-  				DEFAULT: '#FA7275'
+  			brand:{
+				DEFAULT: '#FA7275',
+				'100': '#EA6365',	
   			},
   			red: '#FF7474',
   			error: '#b80000',

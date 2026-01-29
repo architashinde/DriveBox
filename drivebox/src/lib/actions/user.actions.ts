@@ -1,4 +1,4 @@
-"use server";
+"use client";
 
 import { ID, Query } from "node-appwrite";
 import { createAdminClient } from "../appwrite";
@@ -13,7 +13,7 @@ const getUserByEmail = async (email: string) => {
     const result = await databases.listDocuments(
         appwriteConfig.databaseId,
         appwriteConfig.usersCollectionId,
-        [Query.equal("email", email)]
+        [Query.equal("email", [email])]
     );
 
     return result.total > 0 ? result.documents[0] : null;

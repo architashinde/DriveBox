@@ -7,13 +7,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       
       {/* LEFT PANEL */}
       <section className="w-1/2 bg-blue-500 p-12 flex flex-col justify-center text-white">
-        <Image
-          src="/logoo.png"
-          alt="DriveBox logo"
-          width={32}
-          height={32}
-          className="mb-6"
-        />
+       <div className="mb-8">
+         <Image
+           src="/logoo.png"
+           alt="DriveBox logo"
+           width={32}
+           height={32}
+           className="mb-6"
+          />
+        </div>
         <div className="space-y-5 text-white">
           <h1 className="text-4xl font-bold">Manage Files The Best Way
           </h1>
