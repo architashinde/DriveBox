@@ -1,10 +1,11 @@
-
+"use server"
 
 import { ID, Query } from "node-appwrite";
 import { createAdminClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { parseStringify } from "../utils";
 import { string } from "zod";
+import {cookies} from "next/headers"
 
 export const getUserByEmail = async (email: string) => {
     const {databases} = await createAdminClient();
@@ -24,6 +25,7 @@ const handleError = (error: unknown, message: string) => {
 };
 
 export const sendEmailOTP = async ({email}: {email: string}) => {
+    console.log("SIGN UP FUNCTION HIT");
     const {account} = await createAdminClient();
     try{
         const session = await account.createEmailToken(ID.unique(), email);
@@ -66,24 +68,29 @@ export const createAccount = async ({
     return parseStringify({accountId});
 
 };
+export async function verifySecret(formData: FormData) {
+  const accountId = formData.get("accountId") as string;
+  const password = formData.get("password") as string;
 
-export const verifySecret = async({ accountId, password }: { accountId: string; password: string; }) => {
-    try{
-        const {account} = await createAdminClient();
-        const session = await account.createSession(accountId,password);
-        (await cookies()).set('appwrite-session', session.secret, {path:'/', httpOnly:true, sameSite:'strict', secure:true})
-        return parseStringify({sessionId:session.$id});
-    } catch(error){
-        handleError(error, "Failed to verify OTP")
-    }
-    
+  try {
+    const { account } = await createAdminClient();
+    const session = await account.createSession(accountId, password);
 
-};
+    const cookieStore= cookies();
 
-
-
-
-function cookies() {
-    throw new Error("Function not implemented.");
+    cookieStore.set("appwrite-session", session.secret, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV,
+    });
+  } catch (error) {
+    throw new Error("Failed to verify OTP");
+  }
+  return {sessionId:sessionStorage.$id};
 }
+
+
+
+
 

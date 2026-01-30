@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import {signUp} from "@/lib/actions/user.actions"
 import { Button } from "@/components/ui/button"
 import {
   Form,
