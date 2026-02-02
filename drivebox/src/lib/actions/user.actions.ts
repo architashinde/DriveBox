@@ -76,19 +76,21 @@ export async function verifySecret(formData: FormData) {
     const { account } = await createAdminClient();
     const session = await account.createSession(accountId, password);
 
-    const cookieStore= cookies();
+    const cookieStore = await cookies(); // ⭐ FIXED HERE
 
     cookieStore.set("appwrite-session", session.secret, {
       path: "/",
       httpOnly: true,
       sameSite: "strict",
-      secure: process.env.NODE_ENV,
+      secure: process.env.NODE_ENV === "production",
     });
+
+    return { sessionId: session.$id }; // also fixed (see below)
   } catch (error) {
     throw new Error("Failed to verify OTP");
   }
-  return {sessionId:sessionStorage.$id};
 }
+
 
 
 
