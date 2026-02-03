@@ -4,7 +4,6 @@ import { ID, Query } from "node-appwrite";
 import { createAdminClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { parseStringify } from "../utils";
-import { string } from "zod";
 import {cookies} from "next/headers"
 
 export const getUserByEmail = async (email: string) => {

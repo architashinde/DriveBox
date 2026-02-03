@@ -25,9 +25,9 @@ export const createSessionClient = async () => {
 
 export const createAdminClient = async () => {
   const client = new Client()
-    .setEndpoint(process.env.APPWRITE_ENDPOINT!)   // NOT NEXT_PUBLIC
-    .setProject(process.env.APPWRITE_PROJECT_ID!)
-    .setKey(process.env.APPWRITE_API_KEY!);        // 🔥 THIS IS REQUIRED
+    .setEndpoint(appwriteConfig.endpointUrl)   // NOT NEXT_PUBLIC
+    .setProject(appwriteConfig.projectId!)
+    .setKey(appwriteConfig.secretKey);        // 🔥 THIS IS REQUIRED
     return {
         get account(){
             return new Account(client);
