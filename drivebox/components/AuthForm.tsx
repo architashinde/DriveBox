@@ -1,131 +1,117 @@
-
 "use client"
 
-import React, { useState } from 'react';
-import Image from 'next/image';
+import React, { useState } from "react";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { Button } from "@/components/ui/button"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import Link from 'next/link';
-import { createAccount } from '@/lib/actions/user.actions';
-import OtpModal from './OTPModal';
-
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import OTPModal from "./OTPModal";
+import { createAccount } from "@/lib/actions/user.actions";
 
 const formSchema = z.object({
   fullName: z.string().min(2).max(50).optional(),
   email: z.string().email("Invalid email address"),
-})
+});
 
 type AuthFormProps = {
-  formType: "sign-in" | "sign-up"
-}
+  formType: "sign-in" | "sign-up";
+};
 
 const AuthForm = ({ formType }: AuthFormProps) => {
-    
-   const [isLoading, setIsLoading] = useState(false);
-   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-   const [accountId, setAccountId]= useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [accountId, setAccountId] = useState<string | null>(null);
+  const [emailForOtp, setEmailForOtp] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      fullName: "", email: "",
-    },
-  })
+    defaultValues: { fullName: "", email: "" },
+  });
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
-    setErrorMessage(" ");
-
-    try{
+    setErrorMessage(null);
+    try {
+      // createAccount is server-side in your codebase; if it's not exposed to client,
+      // you should call an API route that wraps createAccount.
       const user = await createAccount({
-      fullName: values.fullName || " ",
-      email: values.email,
-    });
-      setAccountId(user.accountId);
-    }catch{
-      setErrorMessage('Failed to create an account. Please try again.');
+        fullName: values.fullName || "",
+        email: values.email,
+      } as { fullName: string; email: string });
 
-    }finally{
+      // user should contain accountId per your implementation
+      if (user?.accountId) {
+        setAccountId(user.accountId);
+        setEmailForOtp(values.email);
+      } else {
+        setErrorMessage("Failed to create an account. Please try again.");
+      }
+    } catch (err) {
+      setErrorMessage("Failed to create an account. Please try again.");
+    } finally {
       setIsLoading(false);
     }
-    
-   
-  }
+  };
 
-  return(
+  return (
     <>
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="auth-form space-y-8">
-        <h1 className='form-title font-bold'>{formType === "sign-in" ? "Sign In" : "Sign Up"}</h1>
-        {formType === "sign-up" && (
-          <FormField
-            control={form.control}
-            name="fullName"
-            render={({ field }) => (
-              <FormItem>
-                <div className='shad-form-item'>
-                  <FormLabel className='shad-form-label'>Full Name</FormLabel>
-                </div>
-                <FormControl>
-                  <Input placeholder="Enter Your Full Name" className='shadn-input' {...field} />
-                </FormControl>
-                <FormMessage className='shad-form-message' />
-              </FormItem>
-            )}
-          /> 
-        )}
-        <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <div className='shad-form-item'>
-                  <FormLabel className='shad-form-label'>Email</FormLabel>
-                </div>
-                <FormControl>
-                  <Input placeholder="Enter Your Email ID" className='shadn-input' {...field} />
-                </FormControl>
-                <FormMessage className='shad-form-message'/>
-              </FormItem>
-            )}
-          />
-        <Button type="submit" className='form-submit-button' disabled={isLoading}>{formType === "sign-in" ? "Sign In" : "Sign Up"}
-            {isLoading && (
-                <Image src="/loader.svg" alt="Loading" width={20} height={20} className='ml-2 animate-spin' />
-            )}
-        </Button>
+      <div className="auth-form">
+        <h1 className="form-title">{formType === "sign-in" ? "Sign In" : "Sign Up"}</h1>
 
-        {errorMessage && (
-            <p className='error-message'>*{errorMessage}</p>
-        )}
-        <div className='body-2 flex justify-center'>
-            <p className='text-light-100'>
-                {formType === "sign-in" ? "Don't have an account? " : "Already have an account? "}
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-4"
+          noValidate
+        >
+          {formType === "sign-up" && (
+            <div>
+              <label className="shad-form-label" htmlFor="fullName">
+                Full Name
+              </label>
+              <input
+                id="fullName"
+                {...form.register("fullName")}
+                className="shadn-input"
+                placeholder="Your full name"
+              />
+              <p className="shad-form-message">
+                {form.formState.errors.fullName?.message as string}
+              </p>
+            </div>
+          )}
+
+          <div>
+            <label className="shad-form-label" htmlFor="email">Email</label>
+            <input
+              id="email"
+              {...form.register("email")}
+              className="shadn-input"
+              placeholder="you@example.com"
+            />
+            <p className="shad-form-message">
+              {form.formState.errors.email?.message as string}
             </p>
-            <Link href={formType === "sign-in" ? "/sign-up" : "/sign-in"} className='ml-1 font-medium text-brand'>{formType === "sign-in" ? "Sign Up" : "Sign In"}</Link>
-        </div>
-      </form>
-    </Form>
+          </div>
 
-     {/* Otp verification */}
+          <Button type="submit" className="form-submit-button" disabled={isLoading}>
+            {formType === "sign-in" ? "Sign In" : "Sign Up"}
+          </Button>
 
-     {accountId && <OtpModal email = {form.getValues("email")}
-     accountId = {accountId}
-     />}
+          {isLoading && <p>Loading…</p>}
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+        </form>
 
+        <p className="body-2">
+          {formType === "sign-in" ? "Don't have an account?" : "Already have an account?"}{" "}
+          {/* you can link to other page */}
+        </p>
+      </div>
+
+      {accountId && emailForOtp && (
+        <OTPModal accountId={accountId} email={emailForOtp} />
+      )}
     </>
-  )
-
+  );
 };
 
 export default AuthForm;

@@ -27,7 +27,7 @@ export const sendEmailOTP = async ({email}: {email: string}) => {
     console.log("SIGN UP FUNCTION HIT");
     const {account} = await createAdminClient();
     try{
-        const session = await account.createEmailToken(ID.unique(), email);
+        const session = account.createEmailToken(ID.unique(), email);
         return session.userId;
     }
     catch(error){

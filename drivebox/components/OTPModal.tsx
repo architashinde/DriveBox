@@ -1,92 +1,99 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-
 import { Button } from "@/components/ui/button";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
 
-import { verifySecret, sendEmailOTP } from "@/lib/actions/user.actions";
+/**
+ * NOTE:
+ * This is a minimal client-side UI for entering OTP.
+ * You must implement server-side API routes (e.g. /api/verify-otp and /api/resend-otp)
+ * that call your server functions (verifySecret, sendEmailOTP) securely.
+ */
 
 const OtpModal = ({ accountId, email }: { accountId: string; email: string }) => {
-  const router = useRouter();
-  const [password, setPassword] = useState("");
+  const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setMessage(null);
+    try {
+      // POST to your server endpoint that verifies OTP and creates a session.
+      const res = await fetch("/api/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ accountId, password: otp }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setMessage(data?.error || "Failed to verify OTP");
+      } else {
+        // success: redirect or update UI
+        window.location.href = "/";
+      }
+    } catch (err) {
+      setMessage("Failed to verify OTP");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const onResend = async () => {
+    setIsLoading(true);
+    setMessage(null);
+    try {
+      const res = await fetch("/api/resend-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setMessage(data?.error || "Failed to resend OTP");
+      } else {
+        setMessage("Verification code resent");
+      }
+    } catch {
+      setMessage("Failed to resend OTP");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <AlertDialog open>
-      <AlertDialogContent className="shad-alert-dialog">
-        <AlertDialogHeader>
-          <AlertDialogTitle className="h2 text-center">
-            Enter Your OTP
-          </AlertDialogTitle>
+    <div className="shad-alert-dialog" role="dialog" aria-modal="true">
+      <h2>Enter Your OTP</h2>
+      <p>We sent a code to {email}</p>
 
-          <AlertDialogDescription className="text-center">
-            We sent a code to <span className="text-brand">{email}</span>
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-
-        {/* ✅ THIS FORM IS THE FIX */}
-        <form
-          action={async (formData) => {
-            setIsLoading(true);
-            formData.set("accountId", accountId);
-            await verifySecret(formData);
-            router.push("/");
-          }}
-        >
-          <InputOTP maxLength={6} value={password} onChange={setPassword}>
-            <InputOTPGroup>
-              {[...Array(6)].map((_, i) => (
-                <InputOTPSlot key={i} index={i} />
-              ))}
-            </InputOTPGroup>
-          </InputOTP>
-
-          <input type="hidden" name="password" value={password} />
-
-          <AlertDialogFooter className="mt-4">
-            <AlertDialogAction type="submit">
-              Submit
-              {isLoading && (
-                <Image
-                  src="/loader.png"
-                  alt="loader"
-                  width={20}
-                  height={20}
-                  className="ml-2 animate-spin"
-                />
-              )}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </form>
-
-        <div className="text-center mt-2">
-          Didn&apos;t get a code?
-          <Button
-            variant="link"
-            onClick={() => sendEmailOTP({ email })}
-          >
-            Resend
-          </Button>
+      <form onSubmit={onSubmit}>
+        <div className="shad-otp">
+          <input
+            type="text"
+            inputMode="numeric"
+            maxLength={6}
+            value={otp}
+            onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+            className="shad-otp-slot"
+            aria-label="OTP"
+          />
         </div>
-      </AlertDialogContent>
-    </AlertDialog>
+
+        <Button type="submit" className="shad-submit-btn" disabled={isLoading}>
+          Submit
+        </Button>
+      </form>
+
+      <div>
+        <p>Didn&apos;t get a code?</p>
+        <Button variant="ghost" onClick={onResend} disabled={isLoading}>
+          Resend
+        </Button>
+      </div>
+
+      {message && <p>{message}</p>}
+    </div>
   );
 };
 
