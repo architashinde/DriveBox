@@ -27,7 +27,7 @@ export const sendEmailOTP = async ({email}: {email: string}) => {
     console.log("SIGN UP FUNCTION HIT");
     const {account} = await createAdminClient();
     try{
-        const session = account.createEmailToken(ID.unique(), email);
+        const session = await account.createEmailToken(ID.unique(), email);
         return session.userId;
     }
     catch(error){
@@ -84,7 +84,7 @@ export async function verifySecret(formData: FormData) {
       secure: process.env.NODE_ENV === "production",
     });
 
-    return { sessionId: session.$id }; // also fixed (see below)
+    return parseStringify({ sessionId: session.$id }); // also fixed (see below)
   } catch (error) {
     throw new Error("Failed to verify OTP");
   }

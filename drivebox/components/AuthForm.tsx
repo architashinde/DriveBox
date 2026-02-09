@@ -32,9 +32,9 @@ const AuthForm = ({ formType }: AuthFormProps) => {
     setIsLoading(true);
     setErrorMessage(null);
     try {
-      // createAccount is server-side in your codebase; if it's not exposed to client,
-      // you should call an API route that wraps createAccount.
-      const user = await createAccount({
+       // createAccount is server-side in your codebase; if it's not exposed to client,
+       // you should call an API route that wraps createAccount.
+       const user = await createAccount({
         fullName: values.fullName || "",
         email: values.email,
       } as { fullName: string; email: string });
@@ -46,7 +46,7 @@ const AuthForm = ({ formType }: AuthFormProps) => {
       } else {
         setErrorMessage("Failed to create an account. Please try again.");
       }
-    } catch (err) {
+    } catch (err: unknown) {
       setErrorMessage("Failed to create an account. Please try again.");
     } finally {
       setIsLoading(false);
