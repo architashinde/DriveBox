@@ -53,65 +53,89 @@ const AuthForm = ({ formType }: AuthFormProps) => {
     }
   };
 
-  return (
-    <>
-      <div className="auth-form">
-        <h1 className="form-title">{formType === "sign-in" ? "Sign In" : "Sign Up"}</h1>
+return (
+  <>
+    <div className="auth-form bg-white p-8 rounded-xl shadow-lg">
+      <h1 className="form-title text-brand">
+        {formType === "sign-in" ? "Sign In" : "Sign Up"}
+      </h1>
 
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4"
-          noValidate
-        >
-          {formType === "sign-up" && (
-            <div>
-              <label className="shad-form-label" htmlFor="fullName">
-                Full Name
-              </label>
-              <input
-                id="fullName"
-                {...form.register("fullName")}
-                className="shadn-input"
-                placeholder="Your full name"
-              />
-              <p className="shad-form-message">
-                {form.formState.errors.fullName?.message as string}
-              </p>
-            </div>
-          )}
-
-          <div>
-            <label className="shad-form-label" htmlFor="email">Email</label>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4"
+        noValidate
+      >
+        {formType === "sign-up" && (
+          <div className="shad-form-item">
+            <label className="shad-form-label" htmlFor="fullName">
+              Full Name
+            </label>
             <input
-              id="email"
-              {...form.register("email")}
+              id="fullName"
+              {...form.register("fullName")}
               className="shadn-input"
-              placeholder="you@example.com"
+              placeholder="Your full name"
             />
-            <p className="shad-form-message">
-              {form.formState.errors.email?.message as string}
-            </p>
+            {form.formState.errors.fullName && (
+              <p className="shad-form-message">
+                {form.formState.errors.fullName.message}
+              </p>
+            )}
           </div>
+        )}
 
-          <Button type="submit" className="form-submit-button" disabled={isLoading}>
-            {formType === "sign-in" ? "Sign In" : "Sign Up"}
-          </Button>
+        <div className="shad-form-item">
+          <label className="shad-form-label" htmlFor="email">
+            Email
+          </label>
+          <input
+            id="email"
+            type="email"
+            {...form.register("email")}
+            className="shadn-input"
+            placeholder="you@example.com"
+          />
+          {form.formState.errors.email && (
+            <p className="shad-form-message">
+              {form.formState.errors.email.message}
+            </p>
+          )}
+        </div>
 
-          {isLoading && <p>Loading…</p>}
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
-        </form>
+        <Button type="submit" className="form-submit-button" disabled={isLoading}>
+          {isLoading ? (
+            <span className="flex items-center gap-2">
+              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              {formType === "sign-in" ? "Signing In..." : "Signing Up..."}
+            </span>
+          ) : (
+            formType === "sign-in" ? "Sign In" : "Sign Up"
+          )}
+        </Button>
 
-        <p className="body-2">
-          {formType === "sign-in" ? "Don't have an account?" : "Already have an account?"}{" "}
-          {/* you can link to other page */}
+        {errorMessage && (
+          <p className="error-message">{errorMessage}</p>
+        )}
+      </form>
+
+      <div className="mt-6 text-center">
+        <p className="body-2 text-gray-600">
+          {formType === "sign-in" ? "Don't have an account? " : "Already have an account? "}
+          <a 
+            href={formType === "sign-in" ? "/sign-up" : "/sign-in"}
+            className="text-brand hover:text-brand-100 font-semibold"
+          >
+            {formType === "sign-in" ? "Sign Up" : "Sign In"}
+          </a>
         </p>
       </div>
+    </div>
 
-      {accountId && emailForOtp && (
-        <OTPModal accountId={accountId} email={emailForOtp} />
-      )}
-    </>
-  );
+    {accountId && emailForOtp && (
+      <OTPModal accountId={accountId} email={emailForOtp} />
+    )}
+  </>
+);
 };
 
 export default AuthForm;

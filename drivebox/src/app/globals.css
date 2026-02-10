@@ -15,7 +15,7 @@
 
 @layer utilities {
   .center {
-    @apply flex h-screen items-center justify-center bg-red-500;
+    @apply flex h-screen items-center justify-center bg-white/50 backdrop-blur-sm;
   }
 
   .h1 {

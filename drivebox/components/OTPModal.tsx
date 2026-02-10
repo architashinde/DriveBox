@@ -2,25 +2,36 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-
-/**
- * NOTE:
- * This is a minimal client-side UI for entering OTP.
- * You must implement server-side API routes (e.g. /api/verify-otp and /api/resend-otp)
- * that call your server functions (verifySecret, sendEmailOTP) securely.
- */
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+} from "@/components/ui/alert-dialog";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { X } from "lucide-react";
 
 const OtpModal = ({ accountId, email }: { accountId: string; email: string }) => {
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(true);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (otp.length !== 6) {
+      setMessage("Please enter a 6-digit code");
+      return;
+    }
+    
     setIsLoading(true);
     setMessage(null);
     try {
-      // POST to your server endpoint that verifies OTP and creates a session.
       const res = await fetch("/api/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -30,7 +41,6 @@ const OtpModal = ({ accountId, email }: { accountId: string; email: string }) =>
       if (!res.ok) {
         setMessage(data?.error || "Failed to verify OTP");
       } else {
-        // success: redirect or update UI
         window.location.href = "/";
       }
     } catch (err) {
@@ -53,7 +63,7 @@ const OtpModal = ({ accountId, email }: { accountId: string; email: string }) =>
       if (!res.ok) {
         setMessage(data?.error || "Failed to resend OTP");
       } else {
-        setMessage("Verification code resent");
+        setMessage("✓ Verification code resent to your email");
       }
     } catch {
       setMessage("Failed to resend OTP");
@@ -63,37 +73,76 @@ const OtpModal = ({ accountId, email }: { accountId: string; email: string }) =>
   };
 
   return (
-    <div className="shad-alert-dialog" role="dialog" aria-modal="true">
-      <h2>Enter Your OTP</h2>
-      <p>We sent a code to {email}</p>
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+      <AlertDialogContent className="shad-alert-dialog">
+        <AlertDialogHeader className="relative">
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute right-0 top-0 otp-close-button"
+            aria-label="Close"
+          >
+            <X className="w-5 h-5" />
+          </button>
+          
+          <AlertDialogTitle className="text-2xl font-bold text-center mb-2">
+            Enter Your OTP
+          </AlertDialogTitle>
+          
+          <AlertDialogDescription className="text-center text-gray-600">
+            We sent a verification code to<br />
+            <span className="font-semibold text-brand">{email}</span>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
 
-      <form onSubmit={onSubmit}>
-        <div className="shad-otp">
-          <input
-            type="text"
-            inputMode="numeric"
-            maxLength={6}
-            value={otp}
-            onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-            className="shad-otp-slot"
-            aria-label="OTP"
-          />
+        <form onSubmit={onSubmit} className="space-y-6">
+          <div className="flex justify-center">
+            <InputOTP
+              maxLength={6}
+              value={otp}
+              onChange={setOtp}
+            >
+              <InputOTPGroup className="shad-otp">
+                {[0, 1, 2, 3, 4, 5].map((index) => (
+                  <InputOTPSlot
+                    key={index}
+                    index={index}
+                    className="shad-otp-slot"
+                  />
+                ))}
+              </InputOTPGroup>
+            </InputOTP>
+          </div>
+
+          <Button 
+            type="submit" 
+            className="shad-submit-btn w-full" 
+            disabled={isLoading || otp.length !== 6}
+          >
+            {isLoading ? "Verifying..." : "Submit"}
+          </Button>
+        </form>
+
+        <div className="text-center space-y-2">
+          <p className="text-sm text-gray-600">Didn&apos;t get a code?</p>
+          <Button 
+            variant="ghost" 
+            onClick={onResend} 
+            disabled={isLoading}
+            className="text-brand hover:text-brand-100"
+          >
+            Click to resend
+          </Button>
         </div>
 
-        <Button type="submit" className="shad-submit-btn" disabled={isLoading}>
-          Submit
-        </Button>
-      </form>
-
-      <div>
-        <p>Didn&apos;t get a code?</p>
-        <Button variant="ghost" onClick={onResend} disabled={isLoading}>
-          Resend
-        </Button>
-      </div>
-
-      {message && <p>{message}</p>}
-    </div>
+        {message && (
+          <p className={`text-sm text-center ${
+            message.startsWith("✓") ? "text-green-600" : "text-red-600"
+          }`}>
+            {message}
+          </p>
+        )}
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 
