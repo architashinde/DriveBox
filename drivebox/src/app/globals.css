@@ -92,8 +92,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-brand:#FA7275;
-  --color-brand-100:#EA6365;
+  --color-brand:#2B7EFF;
+  --color-brand-100:#1E5FD9;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
