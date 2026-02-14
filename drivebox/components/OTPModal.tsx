@@ -74,7 +74,7 @@ const OtpModal = ({ accountId, email }: { accountId: string; email: string }) =>
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogContent className="shad-alert-dialog">
+      <AlertDialogContent className="shad-alert-dialog max-w-md">
         <AlertDialogHeader className="relative">
           <button
             onClick={() => setIsOpen(false)}
@@ -106,7 +106,7 @@ const OtpModal = ({ accountId, email }: { accountId: string; email: string }) =>
                   <InputOTPSlot
                     key={index}
                     index={index}
-                    className="shad-otp-slot"
+                    className="shad-otp-slot border-2 border-gray-300 rounded-md w-12 h-12 text-center text-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 "
                   />
                 ))}
               </InputOTPGroup>
