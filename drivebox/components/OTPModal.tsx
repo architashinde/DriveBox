@@ -85,11 +85,11 @@ const OtpModal = ({ accountId, email }: { accountId: string; email: string }) =>
           </button>
           
           <AlertDialogTitle className="text-2xl font-bold text-center mb-2">
-            Enter Your OTP
+            Enter Your 6-digit OTP
           </AlertDialogTitle>
           
           <AlertDialogDescription className="text-center text-gray-600">
-            We sent a verification code to<br />
+            We have sent a verification code to<br />
             <span className="font-semibold text-brand">{email}</span>
           </AlertDialogDescription>
         </AlertDialogHeader>
