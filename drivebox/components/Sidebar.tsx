@@ -1,8 +1,13 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";   
+import { navItems } from "../constants";
+import { usePathname } from "next/dist/client/components/navigation";
+import { cn } from "@/lib/utils";
 
 const Sidebar = () => {
+    const pathname = usePathname();
     return(
         <aside className="sidebar">
             <Link href="/">
@@ -14,9 +19,15 @@ const Sidebar = () => {
 
             <nav className="mt-10">
                 <ul className="flex flex-1 flex-col gap-6">
-                    {[
-                        
-                    ]}
+                    {navItems.map(({ name, icon, url }) => (
+                        <Link key={name} href={url} className="lg:w-full">
+                            <li className={cn("sidebar-nav-item", pathname === url ? "sidebar-nav-item-active" : "")}>
+                                <Image src = {item.icon} alt={item.name} width={24} height={24}
+                                className={cn("nav-icon", pathname === url ? "nav-icon-active" : "")} />
+                                <p className="hidden lg:block">{name}</p>
+                            </li>
+                        </Link>
+                    ))}
                 </ul>
             </nav>
 
