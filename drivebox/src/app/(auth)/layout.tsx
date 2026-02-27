@@ -9,7 +9,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <section className="w-1/2 bg-brand p-12 flex flex-col justify-center text-white">
         <div className="mb-8">
           <Image 
-            src="/logoo.png"
+            src="/logoo.svg"
             alt="DriveBox Logo" 
             width={60} 
             height={60}
