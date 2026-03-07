@@ -17,13 +17,13 @@ const Sidebar = () => {
             <Image src ="/logoo.svg" alt="logo" width={32} height={32} className="lg:hidden" />
             </Link> 
 
-            <nav className="mt-10">
+            <nav className="sidebar-nav">
                 <ul className="flex flex-1 flex-col gap-6">
                     {navItems.map(({ name, icon, url }) => (
                         <Link key={name} href={url} className="lg:w-full">
                             <li className={cn("sidebar-nav-item", pathname === url ? "sidebar-nav-item-active" : "")}>
                                 <Image src = {icon} alt={name} width={24} height={24}
-                                className={cn("nav-icon", pathname === url ? "nav-icon-active" : "")} />
+                                className={cn("nav-icon", pathname === url && "nav-icon-active")} />
                                 <p className="hidden lg:block">{name}</p>
                             </li>
                         </Link>

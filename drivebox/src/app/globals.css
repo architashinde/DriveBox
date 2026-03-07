@@ -34,6 +34,48 @@
     @apply text-sm;
   }
 
+  /* Layout */
+.main-content {
+  @apply h-full flex-1 overflow-auto px-5 py-7 sm:px-7 sm:py-10;
+}
+
+/* Sidebar */
+.sidebar {
+  @apply hidden h-screen w-[90px] flex-col overflow-auto px-5 py-7 
+         sm:flex lg:w-[280px] xl:w-[325px] bg-white border-r border-light-200/20;
+}
+
+.sidebar-nav-item {
+  @apply flex items-center gap-4 rounded-xl p-3 lg:w-full 
+         text-light-100 hover:bg-brand-100/10 hover:text-brand transition-all;
+}
+
+.sidebar-nav-item-active {
+  @apply bg-brand text-white shadow-drop-2 hover:bg-brand hover:text-white;
+}
+
+.nav-icon {
+  @apply w-6 opacity-50;
+}
+
+.nav-icon-active {
+  @apply opacity-100 brightness-200;
+}
+
+/* Header */
+.header {
+  @apply hidden items-center justify-between gap-5 p-5 sm:flex lg:py-7 xl:gap-10;
+}
+
+.header-wrapper {
+  @apply flex items-center gap-4;
+}
+
+.sign-out-button {
+  @apply flex h-[52px] min-w-[54px] items-center justify-center rounded-full 
+         bg-brand/10 p-0 shadow-none transition-all hover:bg-brand/20;
+}
+
   /* Auth Form Styles */
   .auth-form {
     @apply w-full max-w-[450px] space-y-5;
