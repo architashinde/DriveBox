@@ -1,6 +1,9 @@
 @import "tailwindcss";
+@config "../../tailwind.config.ts";
+@source "../../components/**/*.{ts,tsx}";
 
 @plugin "tailwindcss-animate";
+
 
 @custom-variant dark (&:is(.dark *));
 
@@ -55,7 +58,7 @@
   }
 
   .nav-icon {
-    @apply w-6 opacity-25 filter;
+    @apply w-6 opacity-40;
   }
 
   .nav-icon-active {
