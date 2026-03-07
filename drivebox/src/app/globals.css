@@ -34,49 +34,49 @@
     @apply text-sm;
   }
 
-  /* Layout */
+  /* ─── Layout ─── */
   .main-content {
     @apply h-full flex-1 overflow-auto px-5 py-7 sm:px-7 sm:py-10;
   }
 
-/* Sidebar */
+  /* ─── Sidebar ─── */
   .sidebar {
-   @apply hidden h-screen w-[90px] flex-col overflow-auto px-5 py-7 
-      sm:flex lg:w-[280px] xl:w-[325px] bg-white border-r border-light-200/20;
+    @apply hidden h-screen w-[90px] flex-col overflow-auto px-5 py-7
+           sm:flex lg:w-[280px] xl:w-[325px] bg-white border-r border-gray-200;
   }
 
   .sidebar-nav-item {
-    @apply flex items-center gap-4 rounded-xl p-3 lg:w-full 
-      text-light-100 hover:bg-brand-100/10 hover:text-brand transition-all;
+    @apply flex items-center gap-4 rounded-xl p-3 lg:w-full
+           text-gray-700 hover:bg-brand/10 hover:text-brand transition-all cursor-pointer;
   }
 
   .sidebar-nav-item-active {
-    @apply bg-brand text-white shadow-drop-2 hover:bg-brand hover:text-white;
+    @apply bg-brand text-white hover:bg-brand hover:text-white;
   }
 
   .nav-icon {
-   @apply w-6 opacity-50;
+    @apply w-6 opacity-25 filter;
   }
 
   .nav-icon-active {
-   @apply opacity-100 brightness-200;
+    @apply opacity-100 brightness-200;
   }
 
-/* Header */
-.header {
-  @apply hidden items-center justify-between gap-5 p-5 sm:flex lg:py-7 xl:gap-10;
-}
+  /* ─── Header ─── */
+  .header {
+    @apply hidden items-center justify-between gap-5 p-5 sm:flex lg:py-7 xl:gap-10;
+  }
 
-.header-wrapper {
-  @apply flex items-center gap-4;
-}
+  .header-wrapper {
+    @apply flex items-center gap-4;
+  }
 
-.sign-out-button {
-  @apply flex h-[52px] min-w-[54px] items-center justify-center rounded-full 
-         bg-brand/10 p-0 shadow-none transition-all hover:bg-brand/20;
-}
+  .sign-out-button {
+    @apply flex h-[52px] min-w-[54px] items-center justify-center
+           rounded-full bg-brand/10 p-0 transition-all hover:bg-brand/20;
+  }
 
-  /* Auth Form Styles */
+  /* ─── Auth Form Styles ─── */
   .auth-form {
     @apply w-full max-w-[450px] space-y-5;
   }
@@ -102,14 +102,16 @@
   }
 
   .form-submit-button {
-    @apply w-full bg-brand hover:bg-brand-100 text-white font-semibold py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center;
+    @apply w-full bg-brand hover:bg-brand-100 text-white font-semibold py-3 rounded-lg
+           transition-colors disabled:opacity-50 disabled:cursor-not-allowed
+           flex items-center justify-center;
   }
 
   .error-message {
     @apply text-sm text-red-500 text-center bg-red-50 p-3 rounded-lg;
   }
 
-  /* OTP Modal Styles */
+  /* ─── OTP Modal Styles ─── */
   .shad-alert-dialog {
     @apply max-w-[500px] p-6;
   }
@@ -123,19 +125,24 @@
   }
 
   .shad-otp-slot {
-    @apply w-14 h-14 rounded-lg border-2 border-gray-300 flex items-center justify-center text-xl font-semibold;
+    @apply w-14 h-14 rounded-lg border-2 border-gray-300 flex items-center
+           justify-center text-xl font-semibold;
   }
 
   .shad-submit-btn {
-    @apply w-full bg-brand hover:bg-brand-100 text-white font-semibold py-3 rounded-lg transition-colors disabled:opacity-50;
+    @apply w-full bg-brand hover:bg-brand-100 text-white font-semibold py-3
+           rounded-lg transition-colors disabled:opacity-50;
   }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-brand:#2B7EFF;
-  --color-brand-100:#1E5FD9;
+
+  /* ✅ FIXED: brand is now pink/red to match the tutorial & tailwind.config.ts */
+  --color-brand: #FA7275;
+  --color-brand-100: #EA6365;
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
