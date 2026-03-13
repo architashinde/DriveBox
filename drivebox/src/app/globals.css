@@ -143,8 +143,8 @@
   --color-foreground: var(--foreground);
 
   /* ✅ FIXED: brand is now pink/red to match the tutorial & tailwind.config.ts */
-  --color-brand: #FA7275;
-  --color-brand-100: #EA6365;
+  --color-brand: #2563EB;
+  --color-brand-100: #1D4ED8;
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
