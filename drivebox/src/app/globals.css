@@ -50,11 +50,11 @@
 
   .sidebar-nav-item {
     @apply flex items-center gap-4 rounded-xl p-3 lg:w-full
-           text-gray-700 hover:bg-brand/10 hover:text-brand transition-all cursor-pointer;
+           text-gray-700 hover:bg-brand hover:text-white transition-all cursor-pointer;
   }
 
   .sidebar-nav-item-active {
-    @apply bg-brand text-white hover:bg-brand hover:text-white;
+    @apply bg-brand text-white;
   }
 
   .nav-icon {
