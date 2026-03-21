@@ -42,28 +42,38 @@
     @apply h-full flex-1 overflow-auto px-5 py-7 sm:px-7 sm:py-10;
   }
 
-  /* ─── Sidebar ─── */
-  .sidebar {
-    @apply hidden h-screen w-[90px] flex-col overflow-auto px-5 py-7
-           sm:flex lg:w-[280px] xl:w-[325px] bg-white border-r border-gray-200;
-  }
+/* ─── Sidebar ─── */
+.sidebar {
+  @apply hidden h-screen w-[90px] flex-col overflow-auto px-5 py-7
+         sm:flex lg:w-[280px] xl:w-[325px] bg-white border-r border-gray-200;
+}
 
-  .sidebar-nav-item {
-    @apply flex items-center gap-4 rounded-xl p-3 lg:w-full
-           text-gray-700 hover:bg-brand hover:text-white transition-all cursor-pointer;
-  }
+.sidebar-nav-item {
+  @apply flex items-center gap-4 rounded-xl p-3 lg:w-full text-gray-700 transition-all cursor-pointer;
+}
 
-  .sidebar-nav-item-active {
-    @apply bg-brand text-white;
-  }
+.sidebar-nav-item:hover {
+  background-color: #2563EB;
+  color: white;
+}
 
-  .nav-icon {
-    @apply w-6 opacity-40;
-  }
+.sidebar-nav-item-active {
+  background-color: #2563EB;
+  color: white;
+}
 
-  .nav-icon-active {
-    @apply opacity-100 brightness-200;
-  }
+.nav-icon {
+  @apply w-6 backdrop-opacity-70 transition-all opacity-70;
+}
+
+.nav-icon-active {
+  @apply opacity-100 brightness-200;
+}
+
+.sidebar-nav-item:hover .nav-icon {
+  filter: brightness(0) invert(1);
+  opacity: 1;
+}
 
   /* ─── Header ─── */
   .header {
