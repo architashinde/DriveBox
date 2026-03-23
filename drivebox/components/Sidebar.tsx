@@ -30,6 +30,7 @@ const Sidebar = () => {
                     ))}
                 </ul>
             </nav>
+            <Image src ="" alt="logo" width={506} height={418} className="w-full"/>
 
         </aside>
     )
