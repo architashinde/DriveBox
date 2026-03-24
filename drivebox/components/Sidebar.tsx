@@ -9,15 +9,22 @@ import { cn } from "@/lib/utils";
 const Sidebar = () => {
     const pathname = usePathname();
     return(
-        <aside className="sidebar">
-            <Link href="/">
-            <Image 
-            src="/logoo.svg" 
-            alt="logo" width={50} height={50} className="hidden h-auto lg:block" />
-            <Image src ="/logoo.svg" alt="logo" width={32} height={32} className="lg:hidden" />
+        <aside className="sidebar flex flex-col h-screen">
+            <Link href="/" className="flex items-center gap-3 px-4 py-1">
+              <Image
+                src="/logoo.svg"
+                alt="DriveBox Logo"
+                width={32}
+                height={32}
+                className="h-auto"
+              />
+
+             <span className="text-lg font-semibold text-blue-600 hidden lg:block">
+               DriveBox
+             </span>
             </Link> 
 
-            <nav className="sidebar-nav">
+            <nav className="sidebar-nav py-4">
                 <ul className="flex flex-1 flex-col gap-6">
                     {navItems.map(({ name, icon, url }) => (
                         <Link key={name} href={url} className="lg:w-full">
@@ -30,7 +37,7 @@ const Sidebar = () => {
                     ))}
                 </ul>
             </nav>
-            <Image src ="" alt="logo" width={506} height={418} className="w-full"/>
+            <Image src ="/file.svg" alt="logo" width={506} height={418} className="w-full mt-auto"/>
 
         </aside>
     )
