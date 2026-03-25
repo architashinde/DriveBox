@@ -1,10 +1,13 @@
 "use server"
 
 import { ID, Query } from "node-appwrite";
-import { createAdminClient } from "../appwrite";
+import { createAdminClient, createSessionClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { parseStringify } from "../utils";
 import {cookies} from "next/headers"
+import { avatarPlaceholderUrl } from "../../../constants";
+import { create } from "domain";
+import { parse } from "path";
 
 export const getUserByEmail = async (email: string) => {
     const {databases} = await createAdminClient();
@@ -58,7 +61,7 @@ export const createAccount = async ({
             {
                 fullName,
                 email,
-                avatar:"https://static.vecteezy.com/system/resources/previews/021/548/095/original/default-profile-picture-avatar-user-avatar-icon-person-icon-head-icon-profile-picture-icons-default-anonymous-user-male-and-female-businessman-photo-placeholder-social-network-avatar-portrait-free-vector.jpg",
+                avatar: avatarPlaceholderUrl,
                 accountId,
             },
         );
@@ -90,6 +93,24 @@ export async function verifySecret(formData: FormData) {
   }
 }
 
+export const getCurrentUser = async () => {
+  try {
+    const { databases, account } = await createSessionClient();
+    const result = await account.get();
+
+    const user = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.usersCollectionId,
+      [Query.equal("accountId", [result.$id])]
+    );
+
+    if (user.total <= 0) return null;
+
+    return user.documents[0];
+  } catch (error) {
+    return null; // 🔥 prevents redirect loop
+  }
+};
 
 /* fhewihfuhuh */
 

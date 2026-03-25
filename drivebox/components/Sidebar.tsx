@@ -2,11 +2,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";   
-import { navItems } from "../constants";
+import { avatarPlaceholderUrl, navItems } from "../constants";
 import { usePathname } from "next/dist/client/components/navigation";
 import { cn } from "@/lib/utils";
+interface SidebarProps {
+  fullName: string;
+  avatar: string;
+  email: string;
+}
 
-const Sidebar = () => {
+const Sidebar = ({ fullName, avatar, email }: SidebarProps) => {
     const pathname = usePathname();
     return(
         <aside className="sidebar flex flex-col h-screen">
@@ -38,6 +43,13 @@ const Sidebar = () => {
                 </ul>
             </nav>
             <Image src ="/file.svg" alt="logo" width={506} height={418} className="w-full mt-auto"/>
+            <div className="sidebar-user-info mt-6 py-2 flex items-center gap-3">
+                <Image src={avatar} alt="User Avatar" width={44} height={44} className="sidebar-user-avatar rounded-full" />
+                <div className="hidden lg:block">
+                    <p className="subtitle-2 capitalize">{fullName}</p>
+                    <p className="caption">{email}</p>
+                </div>
+            </div>
 
         </aside>
     )
