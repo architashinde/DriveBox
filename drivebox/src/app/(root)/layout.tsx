@@ -6,21 +6,16 @@ import { getCurrentUser } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
-  let currentUser = null;
-
-  try {
-    currentUser = await getCurrentUser();
-  } catch (error) {
-    currentUser = null; // prevent crash
-  }
+  const currentUser = await getCurrentUser;
 
   if (!currentUser) {
-    console.log("no current user");
+    redirect("/login");
   }
+
 
   return (
     <main className="flex min-h-screen">
-      {currentUser && <Sidebar {...currentUser} />}
+      <Sidebar {...currentUser} />
       <section className="flex h-full flex-1 flex-col">
         <MobileNavigation />
         <Header />

@@ -48,6 +48,26 @@
          sm:flex lg:w-[280px] xl:w-[325px] bg-white border-r border-gray-200;
 }
 
+
+@media (min-width: 640px) {
+  .sidebar {
+    display: flex;
+    width: 90px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    width: 280px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .sidebar {
+    width: 325px;
+  }
+}
+
 .sidebar-nav-item {
   @apply flex items-center gap-4 rounded-xl p-3 lg:w-full text-gray-700 transition-all cursor-pointer;
 }
