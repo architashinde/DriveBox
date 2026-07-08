@@ -18,7 +18,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         </div>
         
         <div className="space-y-5 text-white">
-          <h1 className="text-4xl font-bold">Manage Files The Best Way</h1>
+          <h1 className="text-4xl font-bold">Manage Files in The Best Way</h1>
           
           <div className="bg-white rounded-2xl p-8">
             <Image 
@@ -31,7 +31,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </div>
   
           <p className="text-lg">
-            A Place Where You Can Store All Your Documents
+            A Place Where You Can Store All Your Documents!!
           </p>
         </div>
       </section>
