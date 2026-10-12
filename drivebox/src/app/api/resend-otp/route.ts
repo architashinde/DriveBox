@@ -9,14 +9,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing email." }, { status: 400 });
     }
 
-    const result = (await sendEmailOTP({ email })) as
-      | { error?: string; accountId?: string; demoCode?: string }
-      | string;
-
-    if (typeof result === "string") {
-      return NextResponse.json({ success: true, message: result });
-    }
-
+    const result = await sendEmailOTP(email);
     if (result.error) {
       return NextResponse.json({ error: result.error }, { status: 400 });
     }

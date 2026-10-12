@@ -1,290 +1,65 @@
 @import "tailwindcss";
 @config "../../tailwind.config.ts";
-@source "../../components/**/*.{ts,tsx}";
-
 @plugin "tailwindcss-animate";
 
-
-@custom-variant dark (&:is(.dark *));
+@theme inline {
+  --font-sans: var(--font-outfit), sans-serif;
+  --font-display: var(--font-fraunces), serif;
+  --color-brand: #c4622d;
+  --color-brand-100: #9a4a22;
+  --color-ink: #1c2b27;
+  --color-paper: #f6f1e8;
+  --color-background: #f6f1e8;
+  --color-foreground: #1c2b27;
+  --color-card: #fffbf6;
+  --color-card-foreground: #1c2b27;
+  --color-popover: #fffbf6;
+  --color-popover-foreground: #1c2b27;
+  --color-primary: #c4622d;
+  --color-primary-foreground: #fff8f3;
+  --color-secondary: #efe4d4;
+  --color-secondary-foreground: #1c2b27;
+  --color-muted: #efe4d4;
+  --color-muted-foreground: #5e6a64;
+  --color-accent: #f3e4d4;
+  --color-accent-foreground: #1c2b27;
+  --color-destructive: #a33b32;
+  --color-destructive-foreground: #fff8f3;
+  --color-border: #e0d3c2;
+  --color-input: #e0d3c2;
+  --color-ring: #c4622d;
+}
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-paper text-ink antialiased;
+    background-image: radial-gradient(rgba(28, 43, 39, 0.045) 0.7px, transparent 0.7px);
+    background-size: 16px 16px;
   }
 }
 
 @layer utilities {
-  .center {
-    @apply flex h-screen items-center justify-center bg-white/50 backdrop-blur-sm;
-  }
-
-  .h1 {
-    @apply text-[34px] leading-[42px] font-bold;
-  }
-
-  .h2 {
-    @apply text-2xl font-bold;
-  }
-
-  .subtitle-2 {
-    @apply text-sm text-gray-600;
-  }
-
-  .body-2 {
-    @apply text-sm;
-  }
-
-  /* ─── Layout ─── */
-  .main-content {
-    @apply h-full flex-1 overflow-auto px-5 py-7 sm:px-7 sm:py-10;
-  }
-
-/* ─── Sidebar ─── */
-.sidebar {
-  @apply hidden h-screen w-[90px] flex-col overflow-auto px-5 py-7
-         sm:flex lg:w-[280px] xl:w-[325px] bg-white border-r border-gray-200;
-}
-
-
-@media (min-width: 640px) {
-  .sidebar {
-    display: flex;
-    width: 90px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .sidebar {
-    width: 280px;
-  }
-}
-
-@media (min-width: 1280px) {
-  .sidebar {
-    width: 325px;
-  }
-}
-
-.sidebar-nav-item {
-  @apply flex items-center gap-4 rounded-xl p-3 lg:w-full text-gray-700 transition-all cursor-pointer;
-}
-
-.sidebar-nav-item:hover {
-  background-color: #2563EB;
-  color: white;
-}
-
-.sidebar-nav-item-active {
-  background-color: #2563EB;
-  color: white;
-}
-
-.nav-icon {
-  @apply w-6 backdrop-opacity-70 transition-all opacity-70;
-}
-
-.nav-icon-active {
-  @apply opacity-100 brightness-200;
-}
-
-.sidebar-nav-item:hover .nav-icon {
-  filter: brightness(0) invert(1);
-  opacity: 1;
-}
-
-  /* ─── Header ─── */
-  .header {
-    @apply hidden items-center justify-between gap-5 p-5 sm:flex lg:py-7 xl:gap-10;
-  }
-
-  .header-wrapper {
-    @apply flex items-center gap-4;
-  }
-
-  .sign-out-button {
-    @apply flex h-[52px] min-w-[54px] items-center justify-center
-           rounded-full bg-brand/10 p-0 transition-all hover:bg-brand/20;
-  }
-
-  /* ─── Auth Form Styles ─── */
-  .auth-form {
-    @apply w-full max-w-[450px] space-y-5;
-  }
-
-  .form-title {
-    @apply text-[32px] font-bold leading-[1.2] text-center mb-8;
-  }
-
-  .shad-form-item {
-    @apply w-full space-y-2;
-  }
-
-  .shad-form-label {
-    @apply text-sm font-medium text-gray-700;
-  }
-
   .shadn-input {
-    @apply w-full px-4 py-3 rounded-lg border border-gray-300;
+    @apply h-12 w-full rounded-2xl border border-[#E0D3C2] bg-white px-4 text-sm text-ink outline-none ring-brand/30 placeholder:text-[#8C7B68] focus:ring-2;
   }
 
-  .shad-form-message {
-    @apply text-xs text-red-500 mt-1;
+  .sidebar {
+    @apply sticky top-0 hidden h-screen w-23 shrink-0 flex-col bg-ink px-3 py-6 sm:flex lg:w-70 lg:px-5;
   }
 
-  .form-submit-button {
-    @apply w-full bg-brand hover:bg-brand-100 text-white font-semibold py-3 rounded-lg
-           transition-colors disabled:opacity-50 disabled:cursor-not-allowed
-           flex items-center justify-center;
+  .header {
+    @apply hidden items-center gap-4 px-5 py-5 sm:flex lg:px-8;
   }
 
-  .error-message {
-    @apply text-sm text-red-500 text-center bg-red-50 p-3 rounded-lg;
+  .mobile-header {
+    @apply flex items-center justify-between px-4 py-4 sm:hidden;
   }
 
-  /* ─── OTP Modal Styles ─── */
-  .shad-alert-dialog {
-    @apply max-w-[500px] p-6;
+  .main-content {
+    @apply px-4 pb-16 sm:px-5 lg:px-8;
   }
-
-  .otp-close-button {
-    @apply cursor-pointer hover:opacity-70 transition-opacity;
-  }
-
-  .shad-otp {
-    @apply flex gap-3 justify-center;
-  }
-
-  .shad-otp-slot {
-    @apply w-14 h-14 rounded-lg border-2 border-gray-300 flex items-center
-           justify-center text-xl font-semibold;
-  }
-
-  .shad-submit-btn {
-    @apply w-full bg-brand hover:bg-brand-100 text-white font-semibold py-3
-           rounded-lg transition-colors disabled:opacity-50;
-  }
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-
-  /* ✅ FIXED: brand is now pink/red to match the tutorial & tailwind.config.ts */
-  --color-brand: #2563EB;
-  --color-brand-100: #1D4ED8;
-
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
-}
-
-[data-authjs-branding] {
-  display: none !important;
-}
-
-:root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
 }

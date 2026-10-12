@@ -1,48 +1,34 @@
-import React from "react";
-import Image from "next/image";
+import { redirect } from "next/navigation";
+import { ArchiveArt } from "@/components/ArchiveArt";
+import { DemoBanner } from "@/components/DemoBanner";
+import { Logo } from "@/components/Logo";
+import { getCurrentUser } from "@/lib/actions/user.actions";
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+export default async function AuthLayout({ children }: { children: React.ReactNode }) {
+  const user = await getCurrentUser();
+  if (user) redirect("/");
+
   return (
-    <div className="flex min-h-screen">
-      
-      {/* LEFT PANEL */}
-      <section className="w-1/2 bg-brand p-12 flex flex-col justify-center text-white">
-        <div className="mb-8">
-          <Image 
-            src="/logoo.svg"
-            alt="DriveBox Logo" 
-            width={60} 
-            height={60}
-            className="h-auto"
-          />
-        </div>
-        
-        <div className="space-y-5 text-white">
-          <h1 className="text-4xl font-bold">Manage Files in The Best Way</h1>
-          
-          <div className="bg-white rounded-2xl p-8">
-            <Image 
-              src="/storage.jpg"
-              alt="File storage illustration" 
-              width={400}
-              height={300}
-              className="w-full h-auto rounded-xl"
-            />
+    <div className="min-h-screen">
+      <DemoBanner />
+      <div className="grid min-h-screen lg:grid-cols-2">
+        <section className="bg-ink px-6 py-8 text-[#F6F1E8] lg:px-12 lg:py-12">
+          <Logo wordClassName="text-[#F6F1E8]" />
+          <div className="mx-auto mt-8 max-w-md lg:mt-16">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#D6A24A]">Your shelf</p>
+            <h1 className="mt-3 font-display text-4xl leading-tight lg:text-5xl">
+              Keep every file in one quiet box.
+            </h1>
+            <div className="mt-8">
+              <ArchiveArt />
+            </div>
+            <p className="mt-6 max-w-sm text-sm leading-6 text-[#D9CBB8]">
+              Upload, sort, rename, and share by email. Documents, pictures, and clips each have a drawer.
+            </p>
           </div>
-  
-          <p className="text-lg">
-            A Place Where You Can Store All Your Documents!!
-          </p>
-        </div>
-      </section>
-
-      {/* RIGHT PANEL */}
-      <section className="w-1/2 flex items-center justify-center bg-gray-50">
-        {children}
-      </section>
-
+        </section>
+        <section className="flex items-center justify-center px-6 py-12">{children}</section>
+      </div>
     </div>
   );
-};
-
-export default Layout;
+}

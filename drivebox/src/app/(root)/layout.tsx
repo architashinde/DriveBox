@@ -1,28 +1,27 @@
-import React from "react";
-import Header from "../../../components/Header";
-import Sidebar from "../../../components/Sidebar";
-import MobileNavigation from "../../../components/MobileNavigation";
-import { getCurrentUser } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
+import { DemoBanner } from "@/components/DemoBanner";
+import { Header } from "@/components/Header";
+import { MobileNavigation } from "@/components/MobileNavigation";
+import { Sidebar } from "@/components/Sidebar";
+import { getCurrentUser } from "@/lib/actions/user.actions";
 
-const Layout = async ({ children }: { children: React.ReactNode }) => {
-  const currentUser = await getCurrentUser;
+export const dynamic = "force-dynamic";
 
-  if (!currentUser) {
-    redirect("/login");
-  }
-
+export default async function RootAppLayout({ children }: { children: React.ReactNode }) {
+  const user = await getCurrentUser();
+  if (!user) redirect("/sign-in");
 
   return (
-    <main className="flex min-h-screen">
-      <Sidebar fullName={""} avatar={""} email={""} {...currentUser} />
-      <section className="flex h-full flex-1 flex-col">
-        <MobileNavigation {...currentUser}/>
-        <Header />
-        <div className="main-content">{children}</div>
-      </section>
-    </main>
+    <div className="min-h-screen">
+      <DemoBanner />
+      <div className="flex min-h-screen">
+        <Sidebar user={user} />
+        <section className="min-w-0 flex-1">
+          <MobileNavigation user={user} />
+          <Header />
+          <div className="main-content">{children}</div>
+        </section>
+      </div>
+    </div>
   );
-};
-
-export default Layout; 
+}
