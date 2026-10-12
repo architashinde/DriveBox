@@ -1,47 +1,56 @@
-"use server";
-//node-appwrite 
-import {appwriteConfig} from "@/lib/appwrite/config";
+import { Account, Avatars, Client, Databases, Storage } from "node-appwrite";
 import { cookies } from "next/headers";
-import { Client, Account, Databases, Storage, Avatars } from "node-appwrite";
+import { appwriteConfig } from "@/lib/appwrite/config";
 
-export const createSessionClient = async () => {
-    const client = new Client()
-      .setEndpoint(appwriteConfig.endpointUrl)
-      .setProject(appwriteConfig.projectId);
+export const SESSION_COOKIE = "appwrite-session";
 
-      const cookieStore = await cookies();
-     const session = cookieStore.get("appwrite-session");
+const sessionCookieOptions = {
+  path: "/",
+  httpOnly: true,
+  sameSite: "strict" as const,
+  secure: process.env.NODE_ENV === "production",
+};
 
-      if (!session?.value) {
-      throw new Error("No session found");
-      }
+export async function setSessionCookie(secret: string) {
+  const cookieStore = await cookies();
+  cookieStore.set(SESSION_COOKIE, secret, sessionCookieOptions);
+}
 
-      // 🔥 THIS WAS MISSING
-      client.setSession(session.value);
+export async function clearSessionCookie() {
+  const cookieStore = await cookies();
+  cookieStore.delete(SESSION_COOKIE);
+}
+
+export async function readSessionSecret() {
+  const cookieStore = await cookies();
+  return cookieStore.get(SESSION_COOKIE)?.value ?? null;
+}
+
+export async function createSessionClient() {
+  const client = new Client()
+    .setEndpoint(appwriteConfig.endpointUrl)
+    .setProject(appwriteConfig.projectId);
+
+  const secret = await readSessionSecret();
+  if (!secret) throw new Error("No session found");
+  client.setSession(secret);
 
   return {
     account: new Account(client),
     databases: new Databases(client),
   };
-};
+}
 
-export const createAdminClient = async () => {
+export async function createAdminClient() {
   const client = new Client()
-    .setEndpoint(appwriteConfig.endpointUrl)   // NOT NEXT_PUBLIC
-    .setProject(appwriteConfig.projectId!)
-    .setKey(appwriteConfig.secretKey);        // 🔥 THIS IS REQUIRED
-    return {
-        get account(){
-            return new Account(client);
-        },
-        get databases(){
-            return new Databases(client);
-        },
-        get storage(){
-            return new Storage(client);
-        },
-        get avatars(){
-            return new Avatars(client); 
-        }
-    };
-};
+    .setEndpoint(appwriteConfig.endpointUrl)
+    .setProject(appwriteConfig.projectId)
+    .setKey(appwriteConfig.secretKey);
+
+  return {
+    account: new Account(client),
+    databases: new Databases(client),
+    storage: new Storage(client),
+    avatars: new Avatars(client),
+  };
+}

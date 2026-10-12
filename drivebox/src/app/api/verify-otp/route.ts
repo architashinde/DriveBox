@@ -4,27 +4,21 @@ import { verifySecret } from "@/lib/actions/user.actions";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { accountId, password } = body;
+    const accountId = String(body.accountId || "");
+    const password = String(body.password || "");
 
     if (!accountId || !password) {
-      return NextResponse.json(
-        { error: "Missing accountId or password" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing account or code." }, { status: 400 });
     }
 
-    const formData = new FormData();
-    formData.append("accountId", accountId);
-    formData.append("password", password);
+    const result = await verifySecret(accountId, password);
+    if (result.error) {
+      return NextResponse.json({ error: result.error }, { status: 400 });
+    }
 
-    const result = await verifySecret(formData);
-
-    return NextResponse.json({ success: true, ...result });
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error("OTP verification error:", error);
-    return NextResponse.json(
-      { error: "Failed to verify OTP" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to verify the code." }, { status: 500 });
   }
 }

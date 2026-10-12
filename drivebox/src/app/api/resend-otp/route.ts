@@ -4,23 +4,30 @@ import { sendEmailOTP } from "@/lib/actions/user.actions";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email } = body;
-
+    const email = String(body.email || "");
     if (!email) {
-      return NextResponse.json(
-        { error: "Missing email" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing email." }, { status: 400 });
     }
 
-    await sendEmailOTP({ email });
+    const result = (await sendEmailOTP({ email })) as
+      | { error?: string; accountId?: string; demoCode?: string }
+      | string;
 
-    return NextResponse.json({ success: true, message: "OTP resent successfully" });
+    if (typeof result === "string") {
+      return NextResponse.json({ success: true, message: result });
+    }
+
+    if (result.error) {
+      return NextResponse.json({ error: result.error }, { status: 400 });
+    }
+
+    return NextResponse.json({
+      success: true,
+      accountId: result.accountId,
+      demoCode: result.demoCode,
+    });
   } catch (error) {
     console.error("Resend OTP error:", error);
-    return NextResponse.json(
-      { error: "Failed to resend OTP" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to resend the code." }, { status: 500 });
   }
 }
