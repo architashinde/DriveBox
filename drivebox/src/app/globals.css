@@ -48,7 +48,7 @@
   }
 
   .sidebar {
-    @apply sticky top-0 hidden h-screen w-23 shrink-0 flex-col bg-ink px-3 py-6 sm:flex lg:w-70 lg:px-5;
+    @apply hidden h-full w-[92px] shrink-0 flex-col overflow-hidden bg-ink px-3 py-6 sm:flex lg:w-[280px] lg:px-5;
   }
 
   .header {

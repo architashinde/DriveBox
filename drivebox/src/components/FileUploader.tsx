@@ -5,7 +5,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useDropzone } from "react-dropzone";
 import { Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { uploadFiles } from "@/lib/actions/file.action";
 import { convertFileSize } from "@/lib/utils";
 import { MAX_FILE_SIZE } from "@/constants";
 
@@ -43,15 +42,30 @@ export function FileUploader({ className = "" }: { className?: string }) {
     const formData = new FormData();
     picked.forEach((file) => formData.append("files", file));
     formData.set("path", pathname);
-    const result = await uploadFiles(formData);
-    setIsUploading(false);
-    if (result.error) {
-      setMessage(result.error);
-      return;
+    try {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+        signal: AbortSignal.timeout(90_000),
+      });
+      const result = (await response.json().catch(() => null)) as { error?: string } | null;
+      if (!response.ok || result?.error) {
+        setMessage(
+          result?.error ||
+            (response.status === 413
+              ? "That file is too large to send in one request."
+              : "That file did not finish uploading. Try it once more."),
+        );
+        return;
+      }
+      setOpen(false);
+      setPicked([]);
+      router.refresh();
+    } catch {
+      setMessage("That file did not finish uploading. Try it once more.");
+    } finally {
+      setIsUploading(false);
     }
-    setOpen(false);
-    setPicked([]);
-    router.refresh();
   };
 
   return (

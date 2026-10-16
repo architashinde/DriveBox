@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Archive, Clapperboard, Files, ImageIcon, LayoutDashboard, LogOut, Menu, type LucideIcon } from "lucide-react";
 import { FileUploader } from "@/components/FileUploader";
 import { Logo } from "@/components/Logo";
+import { ProfileMark } from "@/components/ProfileMark";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { navItems } from "@/constants";
@@ -38,7 +38,7 @@ export function MobileNavigation({ user }: { user: DriveUser }) {
         <SheetContent side="left" className="border-none bg-ink text-[#F6F1E8]">
           <SheetTitle className="text-[#F6F1E8]">
             <span className="flex items-center gap-3 pr-8">
-              <Image src={user.avatar} alt="" width={44} height={44} unoptimized className="h-11 w-11 rounded-full" />
+              <ProfileMark name={user.fullName} email={user.email} />
               <span className="min-w-0 text-left">
                 <span className="block truncate text-base capitalize">{user.fullName}</span>
                 <span className="block truncate text-xs font-normal text-[#D9CBB8]">{user.email}</span>

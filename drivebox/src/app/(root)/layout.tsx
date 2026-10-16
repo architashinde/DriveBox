@@ -12,11 +12,11 @@ export default async function RootAppLayout({ children }: { children: React.Reac
   if (!user) redirect("/sign-in");
 
   return (
-    <div className="min-h-screen">
+    <div className="flex h-dvh flex-col">
       <DemoBanner />
-      <div className="flex min-h-screen">
+      <div className="flex min-h-0 flex-1">
         <Sidebar user={user} />
-        <section className="min-w-0 flex-1">
+        <section className="min-h-0 min-w-0 flex-1 overflow-y-auto">
           <MobileNavigation user={user} />
           <Header />
           <div className="main-content">{children}</div>

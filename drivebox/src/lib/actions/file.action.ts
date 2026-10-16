@@ -24,11 +24,23 @@ export async function listFiles(options: {
   sort?: string;
   limit?: number;
 }) {
-  return queryFiles(options);
+  try {
+    return await queryFiles(options);
+  } catch {
+    return [];
+  }
 }
 
 export async function getTotalSpaceUsed(user: DriveUser) {
-  return getUsage(user);
+  try {
+    return await getUsage(user);
+  } catch {
+    return {
+      used: 0,
+      total: 2 * 1024 * 1024 * 1024,
+      categories: [],
+    };
+  }
 }
 
 export async function uploadFiles(formData: FormData) {
