@@ -37,7 +37,7 @@ export default async function CategoryPage({
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">Drawer</p>
           <h1 className="mt-2 font-display text-4xl text-ink sm:text-5xl">{meta.label}</h1>
-          <p className="mt-2 text-sm text-[#5E6A64]">
+          <p className="mt-2 text-sm text-muted-foreground">
             {query ? `Matching “${query}”. ` : ""}
             {meta.blurb}
           </p>
@@ -48,7 +48,7 @@ export default async function CategoryPage({
       </div>
 
       {files.length ? (
-        <FileGrid files={files} viewerId={user.$id} />
+        <FileGrid files={files} viewerIds={[user.$id, user.accountId]} />
       ) : (
         <EmptyState
           title={query ? "Nothing in this drawer" : `No ${meta.label.toLowerCase()} yet`}

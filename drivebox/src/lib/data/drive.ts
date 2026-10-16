@@ -71,7 +71,6 @@ function mapFile(doc: {
   return {
     $id: doc.$id,
     name: String(doc.name ?? ""),
-    url: String(doc.url ?? ""),
     extension: String(doc.extension ?? ""),
     size: Number(doc.size) || 0,
     type,
@@ -79,6 +78,7 @@ function mapFile(doc: {
     users: readSharedUsers(doc.users),
     $createdAt: doc.$createdAt,
     bucketFileId: storedFileId(doc),
+    url: storedFileId(doc) ? `/api/preview/${storedFileId(doc)}` : String(doc.url ?? ""),
   };
 }
 
@@ -810,6 +810,20 @@ export async function deleteFile(fileId: string) {
   } catch (error) {
     return { error: errorMessage(error, "Could not delete the file.") };
   }
+}
+
+export async function readStoredPreview(id: string) {
+  const user = await getCurrentUser();
+  if (!user || !isAppwriteConfigured()) return null;
+  if (!/^[A-Za-z0-9._-]+$/.test(id)) return null;
+
+  const files = await ownedFiles(user);
+  const file = files.find((item) => item.bucketFileId === id);
+  if (!file) return null;
+
+  const { storage } = await createAdminClient();
+  const bytes = await storage.getFileView(appwriteConfig.bucketId, id);
+  return { file, bytes: Buffer.from(bytes) };
 }
 
 export async function readSharedBlob(id: string) {

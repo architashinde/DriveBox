@@ -15,6 +15,9 @@ const fraunces = Fraunces({
 export const metadata: Metadata = {
   title: "DriveBox",
   description: "A personal file box for documents, images, and media.",
+  icons: {
+  icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+},
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

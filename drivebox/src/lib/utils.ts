@@ -51,7 +51,7 @@ export function formatDateTime(value?: string) {
 }
 
 export function toDownloadUrl(url: string) {
-  if (url.startsWith("/api/blob/")) {
+  if (url.startsWith("/api/blob/") || url.startsWith("/api/preview/")) {
     return url.includes("?") ? `${url}&download=1` : `${url}?download=1`;
   }
   return url.replace("/view?", "/download?").replace("/view", "/download");
@@ -66,5 +66,3 @@ export function greetingForHour(hour = new Date().getHours()) {
 export function isEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
-
-

@@ -32,7 +32,7 @@ export default async function DashboardPage({
           <h1 className="mt-2 font-display text-4xl text-ink sm:text-5xl">
             {query ? "Search results" : `${greetingForHour()}, ${user.fullName.split(" ")[0]}`}
           </h1>
-          <p className="mt-2 text-sm text-[#5E6A64]">
+          <p className="mt-2 text-sm text-muted-foreground">
             {query ? `Files with “${query}” in the name.` : "Recent uploads across every drawer."}
           </p>
         </div>
@@ -44,7 +44,7 @@ export default async function DashboardPage({
       {query ? null : <StorageChart usage={usage} />}
 
       {files.length ? (
-        <FileGrid files={files} viewerId={user.$id} />
+        <FileGrid files={files} viewerIds={[user.$id]} />
       ) : (
         <EmptyState
           title={query ? "Nothing matches" : "The box is empty"}
