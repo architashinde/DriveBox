@@ -63,6 +63,7 @@ function mapFile(doc: {
   accountId?: unknown;
   users?: unknown;
   bucketFileId?: unknown;
+  bucketfield?: unknown;
 }): DriveFile {
   const type = doc.type === "image" || doc.type === "document" || doc.type === "video" || doc.type === "audio" || doc.type === "other"
     ? doc.type
@@ -75,10 +76,20 @@ function mapFile(doc: {
     size: Number(doc.size) || 0,
     type,
     owner: String(doc.owner || doc.accountId || ""),
-    users: Array.isArray(doc.users) ? doc.users.map(String) : [],
+    users: readSharedUsers(doc.users),
     $createdAt: doc.$createdAt,
-    bucketFileId: String(doc.bucketFileId ?? ""),
+    bucketFileId: storedFileId(doc),
   };
+}
+
+const bucketAttributeNames = ["bucketFileId", "bucketfield", "bucketFileID", "bucket_file_id"];
+
+function storedFileId(doc: { bucketFileId?: unknown; bucketfield?: unknown }) {
+  const record = doc as Record<string, unknown>;
+  for (const key of bucketAttributeNames) {
+    if (record[key]) return String(record[key]);
+  }
+  return "";
 }
 
 function fileBelongsTo(file: DriveFile, user: DriveUser) {
@@ -89,30 +100,72 @@ function fileOwnedBy(file: DriveFile, user: DriveUser) {
   return file.owner === user.$id || file.owner === user.accountId;
 }
 
-let cachedFileKeys: Set<string> | null = null;
+type FileAttribute = {
+  key: string;
+  type: string;
+  required: boolean;
+  array: boolean;
+  relationType: string;
+};
 
-async function fileAttributeKeys() {
-  if (cachedFileKeys) return cachedFileKeys;
+let cachedFileAttributes: FileAttribute[] | null = null;
+
+function readSharedUsers(value: unknown) {
+  if (Array.isArray(value)) {
+    return value.map((item) => {
+      if (typeof item === "string") return item;
+      if (item && typeof item === "object" && "$id" in item) return String(item.$id);
+      return "";
+    }).filter(Boolean);
+  }
+  if (typeof value === "string" && value) return [value];
+  if (value && typeof value === "object" && "$id" in value) return [String(value.$id)];
+  return [];
+}
+
+function relationshipAcceptsArray(relationType: string) {
+  return relationType === "oneToMany" || relationType === "manyToMany";
+}
+
+async function fileAttributes() {
+  if (cachedFileAttributes) return cachedFileAttributes;
   const { databases } = await createAdminClient();
   const collection = await databases.getCollection(
     appwriteConfig.databaseId,
     appwriteConfig.filesCollectionId,
   );
-  const keys = new Set<string>();
-  for (const attribute of collection.attributes) {
-    if (attribute && typeof attribute === "object" && "key" in attribute && typeof attribute.key === "string") {
-      keys.add(attribute.key);
+  cachedFileAttributes = collection.attributes.flatMap((attribute) => {
+    if (!attribute || typeof attribute !== "object" || !("key" in attribute) || typeof attribute.key !== "string") {
+      return [];
     }
-  }
-  cachedFileKeys = keys;
-  return keys;
+    const relationType = "relationType" in attribute && typeof attribute.relationType === "string" ? attribute.relationType : "";
+    return [{
+      key: attribute.key,
+      type: "type" in attribute && typeof attribute.type === "string" ? attribute.type : "",
+      required: "required" in attribute && attribute.required === true,
+      array: "array" in attribute && attribute.array === true,
+      relationType,
+    }];
+  });
+  return cachedFileAttributes;
 }
 
-function identityQueries(keys: Set<string>, user: DriveUser) {
+async function fileAttributeKeys() {
+  const attributes = await fileAttributes();
+  return new Set(attributes.map((attribute) => attribute.key));
+}
+
+function identityQueries(attributes: FileAttribute[], user: DriveUser) {
+  const keys = new Set(attributes.map((attribute) => attribute.key));
+  const usersAttribute = attributes.find((attribute) => attribute.key === "users");
   const parts: string[] = [];
   if (keys.has("owner")) parts.push(Query.equal("owner", [user.$id]));
   if (keys.has("accountId") && user.accountId) parts.push(Query.equal("accountId", [user.accountId]));
-  if (keys.has("users") && user.email) parts.push(Query.contains("users", [user.email]));
+  if (usersAttribute?.type === "relationship" && !relationshipAcceptsArray(usersAttribute.relationType)) {
+    parts.push(Query.equal("users", [user.$id]));
+  } else if (usersAttribute && usersAttribute.type !== "relationship" && user.email) {
+    parts.push(Query.contains("users", [user.email]));
+  }
   if (parts.length > 1) return [Query.or(parts), Query.limit(100)];
   if (parts.length === 1) return [parts[0], Query.limit(100)];
   return [Query.limit(100)];
@@ -473,14 +526,14 @@ async function ownedFiles(user: DriveUser) {
   }
 
   const { databases } = await createAdminClient();
-  const keys = await fileAttributeKeys();
+  const attributes = await fileAttributes();
   const visible = (documents: DriveFile[]) => documents.filter((file) => fileBelongsTo(file, user));
 
   try {
     const list = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.filesCollectionId,
-      identityQueries(keys, user),
+      identityQueries(attributes, user),
     );
     return visible(list.documents.map((doc) => mapFile(doc)));
   } catch {
@@ -612,9 +665,16 @@ export async function uploadFiles(formData: FormData) {
         size: item.file.size,
         owner: user.$id,
         accountId: user.accountId,
-        users: [],
-        bucketFileId,
       };
+      const usersAttribute = (await fileAttributes()).find((attribute) => attribute.key === "users");
+      if (usersAttribute?.type === "relationship" && !relationshipAcceptsArray(usersAttribute.relationType)) {
+        fields.users = user.$id;
+      } else if (usersAttribute && usersAttribute.type !== "relationship") {
+        fields.users = [];
+      }
+      for (const key of bucketAttributeNames) {
+        if (keys.has(key)) fields[key] = bucketFileId;
+      }
       const data: Record<string, unknown> = {};
       for (const [key, value] of Object.entries(fields)) {
         if (keys.has(key)) data[key] = value;
@@ -708,6 +768,10 @@ async function updateUsers(fileId: string, users: string[]) {
 
   try {
     const { databases } = await createAdminClient();
+    const usersAttribute = (await fileAttributes()).find((attribute) => attribute.key === "users");
+    if (usersAttribute?.type === "relationship") {
+      return { error: "This files collection links users as a relationship, so sharing by email is not available." };
+    }
     await databases.updateDocument(
       appwriteConfig.databaseId,
       appwriteConfig.filesCollectionId,
