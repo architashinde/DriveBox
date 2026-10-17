@@ -29,8 +29,10 @@ export function FileActions({ file, isOwner }: { file: DriveFile; isOwner: boole
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  
 
   const refresh = () => router.refresh();
+  const sharedEmails = people.filter((person) => person.includes("@"));
 
   useEffect(() => {
     if (panel !== "menu") return;
@@ -98,7 +100,7 @@ export function FileActions({ file, isOwner }: { file: DriveFile; isOwner: boole
           setPanel(panel === "menu" ? null : "menu");
           setMessage(null);
         }}
-        className="grid h-9 w-9 place-items-center rounded-full hover:bg-[#F3E4D4]"
+        className="grid h-9 w-9 place-items-center rounded-full hover:bg-accent"
       >
         <MoreHorizontal className="h-4 w-4" />
       </button>
@@ -140,7 +142,7 @@ export function FileActions({ file, isOwner }: { file: DriveFile; isOwner: boole
             {panel === "share" ? (
               <>
                 <h3 className="font-display text-3xl text-ink">Share</h3>
-                <p className="mt-1 text-sm text-[#5E6A64]">Anyone with this email can open the file after they sign in.</p>
+                <p className="mt-1 text-sm text-muted-foreground">Anyone with this email can open the file after they sign in.</p>
                 <div className="mt-4 flex gap-2">
                   <input
                     value={email}
@@ -153,10 +155,10 @@ export function FileActions({ file, isOwner }: { file: DriveFile; isOwner: boole
                   </button>
                 </div>
                 <ul className="mt-4 space-y-2 text-sm">
-                  {people.length ? people.map((person) => (
+                  {sharedEmails.length ? sharedEmails.map((person) => (
                     <li key={person} className="flex items-center justify-between rounded-xl bg-[#F6F1E8] px-3 py-2">
                       {person}
-                      <button type="button" onClick={() => removePerson(person)} className="text-[#A33B32]">
+                      <button type="button" onClick={() => removePerson(person)} className="text-destructive">
                         Remove
                       </button>
                     </li>
@@ -173,12 +175,12 @@ export function FileActions({ file, isOwner }: { file: DriveFile; isOwner: boole
                   <Detail label="Type" value={file.type} />
                   <Detail label="Size" value={convertFileSize(file.size)} />
                   <Detail label="Added" value={formatDateTime(file.$createdAt)} />
-                  <Detail label="Shared with" value={people.length ? people.join(", ") : "Only you"} />
+                  <Detail label="Shared with" value={sharedEmails.length ? sharedEmails.join(", ") : "Only you"} />
                 </dl>
               </>
             ) : null}
 
-            {message ? <p className="mt-3 text-sm text-[#A33B32]">{message}</p> : null}
+            {message ? <p className="mt-3 text-sm text-destructive">{message}</p> : null}
             {panel !== "rename" ? (
               <button type="button" onClick={() => setPanel(null)} className="mt-5 text-sm font-medium text-ink">
                 Close
@@ -198,7 +200,7 @@ export function FileActions({ file, isOwner }: { file: DriveFile; isOwner: boole
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Keep it</AlertDialogCancel>
-            <AlertDialogAction onClick={remove} className="bg-[#A33B32] text-white hover:bg-[#8d3129]" disabled={busy}>
+            <AlertDialogAction onClick={remove} className="bg-destructive text-white hover:bg-[#8d3129]" disabled={busy}>
               {busy ? "Deleting..." : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -223,7 +225,7 @@ function MenuButton({
     <button
       type="button"
       onClick={onClick}
-      className={`flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm hover:bg-[#F6F1E8] ${danger ? "text-[#A33B32]" : ""}`}
+      className={`flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm hover:bg-[#F6F1E8] ${danger ? "text-destructive" : ""}`}
     >
       {icon}
       {label}
@@ -244,7 +246,7 @@ function DialogActions({
 }) {
   return (
     <div className="mt-5 flex justify-end gap-3">
-      <button type="button" onClick={onCancel} className="text-sm text-[#5E6A64]">
+      <button type="button" onClick={onCancel} className="text-sm text-muted-foreground">
         Cancel
       </button>
       <button type="button" onClick={onSave} disabled={busy} className="rounded-full bg-ink px-4 py-2 text-sm text-white">

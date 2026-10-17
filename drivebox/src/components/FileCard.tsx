@@ -19,7 +19,7 @@ const textExtensions = new Set(["txt", "md", "csv", "json"]);
 
 export function FileCard({ file, viewerIds }: { file: DriveFile; viewerIds: string[] }) {
   const Icon = typeIcon[file.type];
-  const isOwner = viewerIds.includes(file.owner);
+  const isOwner = viewerIds.some((id) => Boolean(id) && (id === file.owner || file.users.includes(id)));
   const [open, setOpen] = useState(false);
 
   return (

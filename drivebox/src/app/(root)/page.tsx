@@ -44,7 +44,7 @@ export default async function DashboardPage({
       {query ? null : <StorageChart usage={usage} />}
 
       {files.length ? (
-        <FileGrid files={files} viewerIds={[user.$id]} />
+        <FileGrid files={files} viewerIds={[user.$id, user.accountId]} />
       ) : (
         <EmptyState
           title={query ? "Nothing matches" : "The box is empty"}
