@@ -11,16 +11,16 @@ Upload, sort, rename, preview, and share files by email, with passwordless sign-
 
 <table>
   <tr>
-    <td width="50%"><img src="public/docs/screenshots/sign-in.png" alt="Passwordless sign-in page" /><br /><sub><b>Passwordless sign-in</b>: email a 6-digit code</sub></td>
-    <td width="50%"><img src="public/docs/screenshots/dashboard.png" alt="Dashboard with storage chart and recent files" /><br /><sub><b>Dashboard</b>: storage breakdown and recent uploads</sub></td>
+    <td width="50%"><img src="drivebox/public/docs/sign-in.png" alt="Passwordless sign-in page" /><br /><sub><b>Passwordless sign-in</b>: email a 6-digit code</sub></td>
+    <td width="50%"><img src="drivebox/public/docs/dashboard.png" alt="Dashboard with storage chart and recent files" /><br /><sub><b>Dashboard</b>: storage breakdown and recent uploads</sub></td>
   </tr>
   <tr>
-    <td width="50%"><img src="public/docs/screenshots/images-drawer.png" alt="Images drawer" /><br /><sub><b>Drawers</b>: files sorted automatically by type</sub></td>
-    <td width="50%"><img src="public/docs/screenshots/preview.png" alt="In-app image preview" /><br /><sub><b>Preview</b>: open files without leaving the app</sub></td>
+    <td width="50%"><img src="drivebox/public/docs/images-drawer.png" alt="Images drawer" /><br /><sub><b>Drawers</b>: files sorted automatically by type</sub></td>
+    <td width="50%"><img src="drivebox/public/docs/preview.png" alt="In-app image preview" /><br /><sub><b>Preview</b>: open files without leaving the app</sub></td>
   </tr>
   <tr>
-    <td width="50%"><img src="public/docs/screenshots/share.png" alt="Share dialog" /><br /><sub><b>Sharing</b>: grant access by email</sub></td>
-    <td width="50%" align="center"><img src="public/docs/screenshots/mobile.png" alt="Mobile dashboard" width="300" /><br /><sub><b>Responsive</b>: works on mobile</sub></td>
+    <td width="50%"><img src="drivebox/public/docs/share.png" alt="Share dialog" /><br /><sub><b>Sharing</b>: grant access by email</sub></td>
+    <td width="50%" align="center"><img src="drivebox/public/docs/mobile.png" alt="Mobile dashboard" width="300" /><br /><sub><b>Responsive</b>: works on mobile</sub></td>
   </tr>
 </table>
 
