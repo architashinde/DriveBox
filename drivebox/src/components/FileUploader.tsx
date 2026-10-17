@@ -81,7 +81,7 @@ export function FileUploader({ className = "" }: { className?: string }) {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h2 className="font-display text-3xl text-ink">Add to the box</h2>
-                <p className="mt-1 text-sm text-[#5E6A64]">Up to 50 MB each. 2 GB total.</p>
+                <p className="mt-1 text-sm text-muted-foreground">Up to 50 MB each. 2 GB total.</p>
               </div>
               <button type="button" onClick={close} aria-label="Close upload" className="text-ink/60">
                 <X />
@@ -91,7 +91,7 @@ export function FileUploader({ className = "" }: { className?: string }) {
             <div
               {...dropzone.getRootProps()}
               className={`mt-5 cursor-pointer rounded-2xl border-2 border-dashed px-4 py-10 text-center ${
-                dropzone.isDragActive ? "border-brand bg-[#F3E4D4]" : "border-[#E0D3C2] bg-white"
+                dropzone.isDragActive ? "border-brand bg-accent" : "border-[#E0D3C2] bg-white"
               }`}
             >
               <input {...dropzone.getInputProps()} />
@@ -104,13 +104,13 @@ export function FileUploader({ className = "" }: { className?: string }) {
                 {picked.map((file) => (
                   <li key={`${file.name}-${file.size}`} className="flex justify-between gap-3 rounded-xl bg-[#F6F1E8] px-3 py-2">
                     <span className="truncate">{file.name}</span>
-                    <span className="shrink-0 text-[#5E6A64]">{convertFileSize(file.size)}</span>
+                    <span className="shrink-0 text-muted-foreground">{convertFileSize(file.size)}</span>
                   </li>
                 ))}
               </ul>
             ) : null}
 
-            {message ? <p className="mt-3 text-sm text-[#A33B32]">{message}</p> : null}
+            {message ? <p className="mt-3 text-sm text-destructive">{message}</p> : null}
 
             <Button type="button" onClick={submit} disabled={isUploading} className="mt-5 h-11 w-full bg-ink text-white hover:bg-ink/90">
               {isUploading ? "Uploading..." : "Save to DriveBox"}
